@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+    <beans xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.springframework.org/schema/beans"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+ 
+    <context:component-scan base-package="com.product.controller, com.product.dao" />
+ 
+    <bean id="itemMasterDao" class="com.product.dao.ItemMasterDAOImpl">
+        <constructor-arg>
+            <ref bean="sessionFactory" />
+        </constructor-arg>
+    </bean>
+ 
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="net.sourceforge.jtds.jdbc.Driver" />
+        <property name="url" value="jdbc:jtds:sqlserver://114.143.249.254;DatabaseName=testemployee" />
+        <property name="username" value="sa" />
+        <property name="password" value="admin@123" />
+    </bean>
+ 
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="mappingResources">
+       <list>
+          <value>/hibernate.cfg.xml</value>
+       </list>
+    </property> 
+    <property name="hibernateProperties">
+        <props>
+            <prop key="hibernate.dialect">org.hibernate.dialect.HSQLDialect</prop>
+            <prop key="hibernate.hbm2ddl.auto">update</prop>
+            <prop key="hibernate.show_sql">true</prop>
+        </props>
+    </property>
+        
+    </bean>
+ 
+    <tx:annotation-driven />
+    <bean id="transactionManager"   class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+           <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+ 
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/Pages/"></property>
+        <property name="suffix" value=".jsp"></property>
+    </bean>
+ 
+</beans>
